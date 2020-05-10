@@ -32,7 +32,7 @@
                     <mt-button type="danger" @click="act(i)">Создать акт расхождения</mt-button>
                 </div>
                 <div class="dot-box-error" v-else-if="typeof delivery.json.act !== 'undefined'">
-                    <label>Акт расхождения</label><span>{{delivery.json.act}}</span>
+                    <label>Акт расхождения: </label><span>{{delivery.json.act}}</span>
                 </div>
                 <ul class="result">
                     <li>
@@ -84,7 +84,7 @@
             <img :src="popup.img">
             <div class="result">
                 <ul>
-                    <li><label>Код ячейки:</label><span>{{popup.json.uuid}}</span></li>
+                    <li><label>Код ячейки: </label><span>{{popup.json.uuid}}</span></li>
                 </ul>
             </div>
             <mt-button type="primary" @click="mergeCell">Привязать к доставке</mt-button>
@@ -280,15 +280,6 @@
 </script>
 
 <style scoped>
-    .mint-popup {
-        padding: 1rem;
-        top: auto;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        transform: none;
-
-    }
 
     .acceptance img {
         margin-bottom: 1rem;

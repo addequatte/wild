@@ -23308,10 +23308,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__json_delivery4_json__ = __webpack_require__(90);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__json_delivery4_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__json_delivery4_json__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__json_delivery5_json__ = __webpack_require__(91);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__json_delivery5_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__json_delivery5_json__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__assets_acceptance_gif__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__assets_acceptance_gif___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__assets_acceptance_gif__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__json_delivery4_json__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__json_delivery4_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__json_delivery4_json__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__json_delivery5_json__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__json_delivery5_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__json_delivery5_json__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__json_goods0_json__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__json_goods0_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__json_goods0_json__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__json_goods1_json__ = __webpack_require__(98);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__json_goods1_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__json_goods1_json__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__json_goods2_json__ = __webpack_require__(99);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__json_goods2_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__json_goods2_json__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__json_goods3_json__ = __webpack_require__(100);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__json_goods3_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__json_goods3_json__);
 //
 //
 //
@@ -23333,6 +23343,62 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
 
 
 
@@ -23342,14 +23408,73 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     name: "distribution",
     data() {
         return {
+            step: 1,
             phone: undefined,
             passport: undefined,
             value: [],
             search: false,
-            result: [__WEBPACK_IMPORTED_MODULE_0__json_delivery4_json___default.a, __WEBPACK_IMPORTED_MODULE_1__json_delivery5_json___default.a]
+            goodsI: undefined,
+            popup: undefined,
+            popupVisible: false,
+            lostActs: [],
+            result: [__WEBPACK_IMPORTED_MODULE_1__json_delivery4_json___default.a, __WEBPACK_IMPORTED_MODULE_2__json_delivery5_json___default.a],
+            goods: [{
+                img: __WEBPACK_IMPORTED_MODULE_0__assets_acceptance_gif___default.a,
+                json: __WEBPACK_IMPORTED_MODULE_3__json_goods0_json___default.a
+            }, {
+                img: __WEBPACK_IMPORTED_MODULE_0__assets_acceptance_gif___default.a,
+                json: __WEBPACK_IMPORTED_MODULE_4__json_goods1_json___default.a
+            }, {
+                img: __WEBPACK_IMPORTED_MODULE_0__assets_acceptance_gif___default.a,
+                json: __WEBPACK_IMPORTED_MODULE_5__json_goods2_json___default.a
+            }, {
+                img: __WEBPACK_IMPORTED_MODULE_0__assets_acceptance_gif___default.a,
+                json: __WEBPACK_IMPORTED_MODULE_6__json_goods3_json___default.a
+            }]
         };
     },
     computed: {
+        goodsCodes() {
+            let arr = [];
+            for (let i in this.result) {
+                if (this.value.indexOf(this.result[i].uuid) !== -1) {
+                    for (let n in this.result[i].goods) {
+                        arr.push(this.result[i].goods[n]);
+                    }
+                }
+            }
+            return arr;
+        },
+        errors() {
+            let res = [];
+            let arr = [];
+            for (let i in this.goods) {
+                arr.push(this.goods[i].json.uuid);
+            }
+
+            for (let i in this.goodsCodes) {
+                if (arr.indexOf(this.goodsCodes[i]) === -1) {
+                    res.push(this.goodsCodes[i]);
+                }
+            }
+            console.log(res);
+            return res;
+        },
+        canFinish() {
+            for (let i in this.goods) {
+                if (typeof this.goods[i].json.box === 'undefined' && typeof this.goods[i].json.act === 'undefined') {
+                    return false;
+                }
+            }
+
+            for (let i in this.errors) {
+                if (this.lostActs.indexOf(this.errors[i]) === -1) {
+                    return false;
+                }
+            }
+
+            return true;
+        },
         resultData() {
             let arr = [];
 
@@ -23364,6 +23489,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        lostAct(uuid) {
+            this.lostActs.push(uuid);
+        },
+        uuidError(uuid) {
+            return uuid && this.goodsCodes.indexOf(uuid) === -1 ? true : false;
+        },
+        act(i) {
+            this.$set(this.goods[i].json, 'act', 'weqdsert');
+        },
+        boxModal(i) {
+            this.goodsI = i;
+            this.popup = this.goods[i];
+            this.popupVisible = true;
+        },
+        mergeBox() {
+            this.$set(this.goods[this.goodsI].json, 'box', this.popup.json.uuid);
+            this.popupVisible = false;
+            this.goodsI = undefined;
+            this.popup = undefined;
+        },
         finish() {
             this.$router.push({ path: '/' });
         }
@@ -23584,7 +23729,7 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, ".mint-popup[data-v-96cca87e]{padding:1rem;top:auto;right:0;bottom:0;left:0;transform:none}.acceptance img[data-v-96cca87e]{margin-bottom:1rem}.btn-cell[data-v-96cca87e]{width:inherit;float:right;height:1rem;margin:0}", ""]);
+exports.push([module.i, ".acceptance img[data-v-96cca87e]{margin-bottom:1rem}.btn-cell[data-v-96cca87e]{width:inherit;float:right;height:1rem;margin:0}", ""]);
 
 // exports
 
@@ -23626,7 +23771,7 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, "ul{padding:0}ul ul{padding-left:1rem}ul li{padding:.4rem;list-style:none}img{max-width:100%}button{width:100%;margin-bottom:1rem}.mb-0{margin-bottom:0}.mb-1{margin-bottom:1rem}.dot-box{outline:3px dotted #eee;background:#eee;padding:.5rem}.dot-box-error{outline:3px dotted #e88f8f;background:#e88f8f;padding:.5rem}", ""]);
+exports.push([module.i, ".mint-popup{padding:1rem;top:auto;right:0;bottom:0;left:0;transform:none}ul{padding:0}ul ul{padding-left:1rem}ul li{padding:.4rem;list-style:none}img{max-width:100%}button{width:100%;margin-bottom:1rem}.mb-0{margin-bottom:0}.mb-1{margin-bottom:1rem}.dot-box{outline:3px dotted #eee;background:#eee;padding:.5rem}.dot-box-error{outline:3px dotted #e88f8f;background:#e88f8f;padding:.5rem}", ""]);
 
 // exports
 
@@ -26510,7 +26655,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [_vm._v("Создать акт расхождения")])], 1) : (typeof delivery.json.act !== 'undefined') ? _c('div', {
       staticClass: "dot-box-error"
-    }, [_c('label', [_vm._v("Акт расхождения")]), _c('span', [_vm._v(_vm._s(delivery.json.act))])]) : _vm._e(), _vm._v(" "), _c('ul', {
+    }, [_c('label', [_vm._v("Акт расхождения: ")]), _c('span', [_vm._v(_vm._s(delivery.json.act))])]) : _vm._e(), _vm._v(" "), _c('ul', {
       staticClass: "result"
     }, [_c('li', [_c('label', [_vm._v("Код доставки: ")]), _c('span', [_vm._v(_vm._s(delivery.json.uuid))])]), _vm._v(" "), _c('li', [_c('label', [_vm._v("Заказ: ")]), _c('span', [_vm._v(_vm._s(delivery.json.order))])]), _vm._v(" "), _c('li', [_c('label', [_vm._v("Ячейка: ")]), _c('span', [_vm._v(_vm._s(delivery.json.cell))]), _vm._v(" "), (typeof delivery.json.cell === 'undefined' && !_vm.uuidError(delivery.json.uuid)) ? _c('mt-button', {
       staticClass: "btn-cell",
@@ -26569,7 +26714,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }), _vm._v(" "), _c('div', {
     staticClass: "result"
-  }, [_c('ul', [_c('li', [_c('label', [_vm._v("Код ячейки:")]), _c('span', [_vm._v(_vm._s(_vm.popup.json.uuid))])])])]), _vm._v(" "), _c('mt-button', {
+  }, [_c('ul', [_c('li', [_c('label', [_vm._v("Код ячейки: ")]), _c('span', [_vm._v(_vm._s(_vm.popup.json.uuid))])])])]), _vm._v(" "), _c('mt-button', {
     attrs: {
       "type": "primary"
     },
@@ -26584,7 +26729,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('mt-field', {
+  return _c('div', {
+    staticClass: "distribution"
+  }, [(_vm.step === 1) ? _c('div', {
+    staticClass: "step"
+  }, [_c('mt-field', {
     attrs: {
       "label": "Телефон"
     },
@@ -26630,15 +26779,101 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       },
       expression: "value"
     }
-  })], 1) : (!_vm.result) ? _c('div', [_vm._v("\n        Нет доставок\n    ")]) : _vm._e(), _vm._v(" "), _c('mt-button', {
+  })], 1) : (!_vm.result) ? _c('div', [_vm._v("\n            Нет доставок\n        ")]) : _vm._e(), _vm._v(" "), _c('mt-button', {
     attrs: {
       "type": "primary",
       "disabled": _vm.value.length === 0
     },
     on: {
-      "click": _vm.finish
+      "click": function($event) {
+        _vm.step = 2
+      }
     }
-  }, [_vm._v("Провести выдачу")])], 1)
+  }, [_vm._v("Далее")])], 1) : (_vm.step === 2) ? _c('div', [_vm._l((_vm.goods), function(item, i) {
+    return _c('div', {
+      staticClass: "dot-box mb-1"
+    }, [_c('img', {
+      attrs: {
+        "src": item.img
+      }
+    }), _vm._v(" "), (_vm.uuidError(item.json.uuid) && typeof item.json.act === 'undefined') ? _c('div', {
+      staticClass: "dot-box-error"
+    }, [_c('label', [_vm._v("Товар: " + _vm._s(item.json.uuid) + " не принадлежит выбранным доставкам: " + _vm._s(_vm.value.join(',')))]), _vm._v(" "), _c('mt-button', {
+      attrs: {
+        "type": "danger"
+      },
+      on: {
+        "click": function($event) {
+          return _vm.act(i)
+        }
+      }
+    }, [_vm._v("Создать акт расхождения")])], 1) : (typeof item.json.act !== 'undefined') ? _c('div', {
+      staticClass: "dot-box-error"
+    }, [_c('label', [_vm._v("Акт расхождения: ")]), _c('span', [_vm._v(_vm._s(item.json.act))])]) : _vm._e(), _vm._v(" "), _c('ul', {
+      staticClass: "result"
+    }, [_c('li', [_c('label', [_vm._v("Код товара: ")]), _c('span', [_vm._v(_vm._s(item.json.uuid))])]), _vm._v(" "), _c('li', [(typeof item.json.box === 'undefined' && !_vm.uuidError(item.json.uuid)) ? _c('mt-button', {
+      staticClass: "btn-cell",
+      attrs: {
+        "type": "primary",
+        "size": "small"
+      },
+      on: {
+        "click": function($event) {
+          return _vm.boxModal(i)
+        }
+      }
+    }, [_vm._v("Вернуть\n                    ")]) : _vm._e(), _vm._v(" "), (typeof item.json.box !== 'undefined') ? _c('div', [_c('label', [_vm._v("Возврат в коробке: ")]), _c('span', [_vm._v(_vm._s(item.json.box))])]) : _vm._e()], 1)])])
+  }), _vm._v(" "), _vm._l((_vm.errors), function(error, i) {
+    return _c('div', {
+      staticClass: "errors mb-1"
+    }, [(_vm.lostActs.indexOf(error) === -1) ? _c('div', {
+      staticClass: "dot-box-error"
+    }, [_c('label', [_vm._v("Товар: " + _vm._s(error) + " отсутствует в доставках: " + _vm._s(_vm.value.join(',')))]), _vm._v(" "), _c('mt-button', {
+      attrs: {
+        "type": "danger"
+      },
+      on: {
+        "click": function($event) {
+          return _vm.lostAct(error)
+        }
+      }
+    }, [_vm._v("Создать акт расхождения")])], 1) : _vm._e(), _vm._v(" "), (_vm.lostActs.indexOf(error) !== -1) ? _c('div', {
+      staticClass: "dot-box-error"
+    }, [_c('label', [_vm._v("Акт расхождения: ")]), _c('span', [_vm._v(_vm._s(error))])]) : _vm._e()])
+  }), _vm._v(" "), _c('router-link', {
+    attrs: {
+      "to": "/"
+    }
+  }, [_c('mt-button', {
+    attrs: {
+      "type": "primary",
+      "disabled": !_vm.canFinish
+    }
+  }, [_vm._v("Закончить выдачу")])], 1)], 2) : _vm._e(), _vm._v(" "), (_vm.popup) ? _c('mt-popup', {
+    attrs: {
+      "position": "bottom"
+    },
+    model: {
+      value: (_vm.popupVisible),
+      callback: function($$v) {
+        _vm.popupVisible = $$v
+      },
+      expression: "popupVisible"
+    }
+  }, [_c('img', {
+    attrs: {
+      "src": _vm.popup.img
+    }
+  }), _vm._v(" "), _c('div', {
+    staticClass: "result"
+  }, [_c('ul', [_c('li', [_c('label', [_vm._v("Код коробки: ")]), _c('span', [_vm._v(_vm._s(_vm.popup.json.uuid))])])])]), _vm._v(" "), _c('mt-button', {
+    attrs: {
+      "type": "primary"
+    },
+    on: {
+      "click": _vm.mergeBox
+    }
+  }, [_vm._v("Привязать к доставке")])], 1) : _vm._e()], 1)
 },staticRenderFns: []}
 
 /***/ }),
@@ -30193,13 +30428,13 @@ module.exports = {"uuid":"fim4us","order":"12234970","phone":"7898","passport":"
 /* 91 */
 /***/ (function(module, exports) {
 
-module.exports = {"uuid":"234567","order":"12234970","phone":"7898","passport":"5689","fio":"Иванов Иван Иванович","goods":["csdfue","cstfue","cavfue"]}
+module.exports = {"uuid":"234567","order":"12234970","phone":"7898","passport":"5689","fio":"Иванов Иван Иванович","goods":["32fsdfs"]}
 
 /***/ }),
 /* 92 */
 /***/ (function(module, exports) {
 
-module.exports = {"uuid":"fim4us","order":"12234970","phone":"7898","passport":"5689","fio":"Иванов Иван Иванович","goods":["csdfue","cstfue","cavfue"]}
+module.exports = {"uuid":"fim4us","order":"12234970","phone":"7898","passport":"5689","fio":"Иванов Иван Иванович","goods":["csdfud","cstfve","cavfee"]}
 
 /***/ }),
 /* 93 */
@@ -30224,6 +30459,30 @@ module.exports = {"uuid":"fim4us","order":"12234970","phone":"7898","passport":"
 /***/ (function(module, exports) {
 
 module.exports = {"uuid":"osmtdw"}
+
+/***/ }),
+/* 97 */
+/***/ (function(module, exports) {
+
+module.exports = {"uuid":"32fsdfs"}
+
+/***/ }),
+/* 98 */
+/***/ (function(module, exports) {
+
+module.exports = {"uuid":"dsfsf"}
+
+/***/ }),
+/* 99 */
+/***/ (function(module, exports) {
+
+module.exports = {"uuid":"34234ds"}
+
+/***/ }),
+/* 100 */
+/***/ (function(module, exports) {
+
+module.exports = {"uuid":"3242434"}
 
 /***/ })
 /******/ ]);

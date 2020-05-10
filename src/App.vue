@@ -21,6 +21,15 @@
 </script>
 
 <style>
+    .mint-popup {
+        padding: 1rem;
+        top: auto;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        transform: none;
+
+    }
     ul {
         padding: 0;
     }
