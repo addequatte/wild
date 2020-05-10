@@ -23356,7 +23356,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             for (let i in this.result) {
                 this.result[i].cell = 'efsdwe';
                 arr.push({
-                    label: `Доставка:  ${this.result[i].uuid} из ячейки: ${this.result[i].cell}`,
+                    label: `Доставка: ${this.result[i].uuid} телефон(${this.result[i].phone}) пасспорт(${this.result[i].passport}) из ячейки: ${this.result[i].cell}`,
                     value: this.result[i].uuid
                 });
             }
