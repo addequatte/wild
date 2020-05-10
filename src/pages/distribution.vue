@@ -143,7 +143,6 @@
                         res.push(this.goodsCodes[i]);
                     }
                 }
-                console.log(res)
                 return res;
             },
             canFinish() {
