@@ -23306,13 +23306,66 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__json_delivery4_json__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__json_delivery4_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__json_delivery4_json__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__json_delivery5_json__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__json_delivery5_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__json_delivery5_json__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
 //
 
+
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: "distribution"
+    name: "distribution",
+    data() {
+        return {
+            phone: undefined,
+            passport: undefined,
+            value: [],
+            search: false,
+            result: [__WEBPACK_IMPORTED_MODULE_0__json_delivery4_json___default.a, __WEBPACK_IMPORTED_MODULE_1__json_delivery5_json___default.a]
+        };
+    },
+    computed: {
+        resultData() {
+            let arr = [];
+
+            for (let i in this.result) {
+                this.result[i].cell = 'efsdwe';
+                arr.push({
+                    label: `Доставка:  ${this.result[i].uuid} из ячейки: ${this.result[i].cell}`,
+                    value: this.result[i].uuid
+                });
+            }
+            return arr;
+        }
+    },
+    methods: {
+        finish() {
+            this.$router.push({ path: '/' });
+        }
+    }
 });
 
 /***/ }),
@@ -26339,7 +26392,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Акт расхождения")])], 1), _vm._v(" "), _c('router-link', {
     attrs: {
-      "to": "/extradition"
+      "to": "/distribution"
     }
   }, [_c('mt-button', {
     attrs: {
@@ -26525,7 +26578,61 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c("div")
+  return _c('div', [_c('mt-field', {
+    attrs: {
+      "label": "Телефон"
+    },
+    model: {
+      value: (_vm.phone),
+      callback: function($$v) {
+        _vm.phone = $$v
+      },
+      expression: "phone"
+    }
+  }), _vm._v(" "), _c('mt-field', {
+    attrs: {
+      "label": "Пасспорт"
+    },
+    model: {
+      value: (_vm.passport),
+      callback: function($$v) {
+        _vm.passport = $$v
+      },
+      expression: "passport"
+    }
+  }), _vm._v(" "), _c('mt-button', {
+    attrs: {
+      "type": "primary",
+      "disabled": !_vm.phone || !_vm.passport
+    },
+    on: {
+      "click": function($event) {
+        _vm.search = true
+      }
+    }
+  }, [_vm._v("Найти")]), _vm._v(" "), (_vm.result && _vm.search) ? _c('div', {
+    staticClass: "result"
+  }, [_c('mt-checklist', {
+    attrs: {
+      "title": "Список доставок",
+      "options": _vm.resultData
+    },
+    model: {
+      value: (_vm.value),
+      callback: function($$v) {
+        _vm.value = $$v
+      },
+      expression: "value"
+    }
+  })], 1) : (!_vm.result) ? _c('div', [_vm._v("\n        Нет доставок\n    ")]) : _vm._e(), _vm._v(" "), _c('mt-button', {
+    attrs: {
+      "type": "primary",
+      "disabled": _vm.value.length === 0
+    },
+    on: {
+      "click": _vm.finish
+    }
+  }, [_vm._v("Провести выдачу")])], 1)
 },staticRenderFns: []}
 
 /***/ }),

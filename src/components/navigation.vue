@@ -6,7 +6,7 @@
         <router-link to="/discrepancy">
             <mt-button type="default">Акт расхождения</mt-button>
         </router-link>
-        <router-link to="/extradition">
+        <router-link to="/distribution">
             <mt-button type="default">Выдача</mt-button>
         </router-link>
         <router-link to="/refund">
