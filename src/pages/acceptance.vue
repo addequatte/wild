@@ -26,7 +26,8 @@
             <h3>Код ПВЗ:{{json.uuid_pvz}}</h3>
             <div class="dot-box mb-1" v-for="(delivery,i) of deliveries">
                 <img :src="delivery.img">
-                <div class="dot-box-error" v-if="uuidError(delivery.json.uuid) && typeof delivery.json.act === 'undefined'">
+                <div class="dot-box-error"
+                     v-if="uuidError(delivery.json.uuid) && typeof delivery.json.act === 'undefined'">
                     <label>Доставка: {{delivery.json.uuid}} не принадлежит коробке: {{json.uuid}}</label>
                     <mt-button type="danger" @click="act(i)">Создать акт расхождения</mt-button>
                 </div>
@@ -42,7 +43,8 @@
                     </li>
                     <li>
                         <label>Ячейка: </label><span>{{delivery.json.cell}}</span>
-                        <mt-button v-if="typeof delivery.json.cell === 'undefined' && !uuidError(delivery.json.uuid)" type="primary" size="small"
+                        <mt-button v-if="typeof delivery.json.cell === 'undefined' && !uuidError(delivery.json.uuid)"
+                                   type="primary" size="small"
                                    class="btn-cell" @click="cellModal(i)">Скан. ячейки
                         </mt-button>
                     </li>
@@ -64,6 +66,15 @@
                         </ul>
                     </li>
                 </ul>
+            </div>
+            <div class="errors mb-1" v-for="(error, i) of errors">
+                <div class="dot-box-error" v-if="lostActs.indexOf(error) === -1">
+                    <label>Доставка: {{error}} отсутствует коробке: {{json.uuid}}</label>
+                    <mt-button type="danger" @click="lostAct(error)">Создать акт расхождения</mt-button>
+                </div>
+                <div class="dot-box-error" v-if="lostActs.indexOf(error) !== -1">
+                    <label>Акт расхождения: </label><span>{{error}}</span>
+                </div>
             </div>
             <router-link to="/">
                 <mt-button type="primary" :disabled="!canFinish">Закончить приемку</mt-button>
@@ -120,6 +131,7 @@
                 acceptanceImg: acceptanceImg,
                 json: json,
                 popup: undefined,
+                lostActs: [],
                 popups: [
                     {
                         img: popupImg0,
@@ -212,20 +224,38 @@
             }
         },
         computed: {
-          canFinish()
-          {
-              for (let i in this.deliveries) {
-                  if(typeof this.deliveries[i].json.cell === 'undefined' && typeof this.deliveries[i].json.act === 'undefined') {
-                      return false;
-                  }
-              }
-              return true
-          }
+            errors() {
+                let res = [];
+                let arr = [];
+                for(let i in this.deliveries) {
+                    arr.push(this.deliveries[i].json.uuid);
+                }
+                for (let i in this.json.delivery_codes) {
+                    if(arr.indexOf(this.json.delivery_codes[i]) === -1) {
+                        res.push(this.json.delivery_codes[i]);
+                    }
+                }
+
+                return res;
+            },
+            canFinish() {
+                for (let i in this.deliveries) {
+                    if (typeof this.deliveries[i].json.cell === 'undefined' && typeof this.deliveries[i].json.act === 'undefined') {
+                        return false;
+                    }
+                }
+
+                for (let i in this.errors) {
+                    if (this.lostActs.indexOf(this.errors[i]) === -1) {
+                        return false;
+                    }
+                }
+
+                return true
+            }
         },
         methods: {
             uuidError(uuid) {
-                console.log(uuid)
-                console.log(this.json.delivery_codes)
                 return uuid && this.json.delivery_codes.indexOf(uuid) === -1 ? true : false;
             },
             cellModal(i) {
@@ -234,14 +264,16 @@
                 this.popupVisible = true
             },
             act(i) {
-                this.$set(this.deliveries[i].json, 'act','weqdsert')
+                this.$set(this.deliveries[i].json, 'act', 'weqdsert')
             },
-            mergeCell()
-            {
-                this.$set(this.deliveries[this.deliveryI].json, 'cell',this.popup.json.uuid)
+            mergeCell() {
+                this.$set(this.deliveries[this.deliveryI].json, 'cell', this.popup.json.uuid)
                 this.popupVisible = false
                 this.deliveryI = undefined;
                 this.popup = undefined;
+            },
+            lostAct(uuid) {
+                this.lostActs.push(uuid)
             }
         }
     }
@@ -254,9 +286,10 @@
         right: 0;
         bottom: 0;
         left: 0;
-         transform: none;
+        transform: none;
 
     }
+
     .acceptance img {
         margin-bottom: 1rem;
     }
